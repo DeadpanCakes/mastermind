@@ -2,7 +2,7 @@
 
 # Peg stores color
 class Peg
-  attr_reader :color
+  attr_reader :color, :icon
 
   def initialize(icon)
     @color = determine_color(icon)
