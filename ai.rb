@@ -2,12 +2,23 @@
 
 require './peg'
 
+# History stores past guesses and the resulting hint
+class History
+  attr_reader :row, :hint
+
+  def initialize(row, hint)
+    @row = row
+    @hint = hint
+  end
+end
+
 # AI to make informed guesses
 class AI
   OPTIONS = [Peg.new('B'), Peg.new('P'), Peg.new('O'), Peg.new('Y'), Peg.new('G'), Peg.new('R')].freeze
 
   def initialize
     @eliminated = [[], [], [], []]
+    @guess_history = []
   end
 
   def pick_peg(eliminated)
