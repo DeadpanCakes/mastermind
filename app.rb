@@ -12,4 +12,8 @@ class Game
     @code = []
     4.times { @code.push(COLORS.sample) }
   end
+
+  def increment_turn
+    @turn += 1
+  end
 end
