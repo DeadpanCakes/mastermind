@@ -4,8 +4,23 @@
 class Peg
   attr_reader :color
 
-  def initialize(color)
-    @color = color
-    @icon = color[0].upcase
+  def initialize(icon)
+    @color = determine_color(icon)
+    @icon = icon
+  end
+
+  private
+
+  def color_map
+    { 'B' => 'Blue',
+      'R' => 'Red',
+      'G' => 'Green',
+      'O' => 'Orange',
+      'Y' => 'Yellow',
+      'P' => 'Purple' }
+  end
+
+  def determine_color(icon)
+    color_map[icon]
   end
 end
