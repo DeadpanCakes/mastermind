@@ -10,7 +10,7 @@ class AI
     @eliminated = [[], [], [], []]
   end
 
-  def pick_peg(_eliminated)
-    OPTIONS.reject { |option| @eliminated.include?(option) }.sample
+  def pick_peg(eliminated)
+    OPTIONS.reject { |option| eliminated.include?(option) }.sample
   end
 end
