@@ -30,4 +30,16 @@ class AI
      [OPTIONS[2], OPTIONS[2], OPTIONS[3], OPTIONS[3]],
      [OPTIONS[4], OPTIONS[4], OPTIONS[5], OPTIONS[5]]]
   end
+
+  def handle_correct_colors
+    wrong_colors = OPTIONS.reject { |option| guess_history[-1].include?(option) }
+    @eliminated.each { |arr| arr.concat(wrong_colors) }
+  end
+
+  def handle_wrong_colors
+    wrong_colors = guess_history[-1].uniq
+    @eliminated.each { |arr| arr.concat(wrong_colors) }
+  end
+
+  def process_hint(hint); end
 end
