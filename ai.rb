@@ -41,5 +41,8 @@ class AI
     @eliminated.each { |arr| arr.concat(wrong_colors) }
   end
 
-  def process_hint(hint); end
+  def process_hint(hint)
+    handle_correct_colors if hint[:wrong].zero?
+    handle_wrong_colors if hint[:wrong] == 4
+  end
 end
