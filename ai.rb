@@ -2,16 +2,6 @@
 
 require './peg'
 
-# History stores past guesses and the resulting hint
-class History
-  attr_reader :row, :hint
-
-  def initialize(row, hint)
-    @row = row
-    @hint = hint
-  end
-end
-
 # AI to make informed guesses
 class AI
   OPTIONS = [Peg.new('B'), Peg.new('P'), Peg.new('O'), Peg.new('Y'), Peg.new('G'), Peg.new('R')].freeze
@@ -19,16 +9,13 @@ class AI
   def initialize
     @eliminated = [[], [], [], []]
     @guess_history = []
+    @hints = []
   end
+
+  private
 
   def pick_peg(eliminated)
     OPTIONS.reject { |option| eliminated.include?(option) }.sample
-  end
-
-  def init_guesses
-    [[OPTIONS[0], OPTIONS[0], OPTIONS[1], OPTIONS[1]],
-     [OPTIONS[2], OPTIONS[2], OPTIONS[3], OPTIONS[3]],
-     [OPTIONS[4], OPTIONS[4], OPTIONS[5], OPTIONS[5]]]
   end
 
   def handle_correct_colors
@@ -44,5 +31,28 @@ class AI
   def process_hint(hint)
     handle_correct_colors if hint[:wrong].zero?
     handle_wrong_colors if hint[:wrong] == 4
+  end
+
+  public
+
+  def init_guesses
+    [[OPTIONS[0], OPTIONS[0], OPTIONS[1], OPTIONS[1]],
+     [OPTIONS[2], OPTIONS[2], OPTIONS[3], OPTIONS[3]],
+     [OPTIONS[4], OPTIONS[4], OPTIONS[5], OPTIONS[5]]]
+  end
+
+  def take_turn(turn)
+    if turn > 3
+      guess = []
+      @eliminated.each { |spot| guess.push(pick_peg(spot)) }
+      guess.map(&:icon).join
+    else
+      init_guesses[turn - 1].map(&:icon).join
+    end
+  end
+
+  def end_turn(hint)
+    @hints.push(hint)
+    process_hint(@hints[-1])
   end
 end
