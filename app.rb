@@ -12,6 +12,7 @@ class Game
     @turn = 1
     @code = []
     4.times { @code.push(PEGS.sample) }
+    @guesses = []
   end
 
   private
@@ -24,11 +25,22 @@ class Game
     @game_over
   end
 
+  def make_guess; end
+
+  def take_turn; end
+
+  def guess_is_correct?
+    @guesses[-1] == @code
+  end
+
+  def end_turn
+    increment_turn
+    @game_over = true if guess_is_correct?
+  end
+
   public
 
   def start_game
-    until game_over?
-
-    end
+    take_turn until game_over?
   end
 end
