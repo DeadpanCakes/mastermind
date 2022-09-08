@@ -13,4 +13,10 @@ class AI
   def pick_peg(eliminated)
     OPTIONS.reject { |option| eliminated.include?(option) }.sample
   end
+
+  def init_guesses
+    [[OPTIONS[0], OPTIONS[0], OPTIONS[1], OPTIONS[1]],
+     [OPTIONS[2], OPTIONS[2], OPTIONS[3], OPTIONS[3]],
+     [OPTIONS[4], OPTIONS[4], OPTIONS[5], OPTIONS[5]]]
+  end
 end
