@@ -5,13 +5,13 @@ require './row'
 
 # Game stores game state, manages game loop
 class Game
-  COLORS = %w[Blue Red Orange Yellow Green Purple].freeze
+  PEGS = %w[Peg.new(Blue) Peg.new(Red) Peg.new(Orange) Peg.new(Yellow) Peg.new(Green) Peg.new(Purple)].freeze
 
   def initialize
     @game_over = false
     @turn = 1
     @code = []
-    4.times { @code.push(COLORS.sample) }
+    4.times { @code.push(PEGS.sample) }
   end
 
   private
