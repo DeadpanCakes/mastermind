@@ -19,12 +19,12 @@ class AI
   end
 
   def handle_correct_colors
-    wrong_colors = OPTIONS.reject { |option| guess_history[-1].include?(option) }
+    wrong_colors = OPTIONS.reject { |option| @guess_history[-1].include?(option) }
     @eliminated.each { |arr| arr.concat(wrong_colors) }
   end
 
   def handle_wrong_colors
-    wrong_colors = guess_history[-1].uniq
+    wrong_colors = @guess_history[-1].uniq
     @eliminated.each { |arr| arr.concat(wrong_colors) }
   end
 
@@ -41,13 +41,20 @@ class AI
      [OPTIONS[4], OPTIONS[4], OPTIONS[5], OPTIONS[5]]]
   end
 
+  def store_guess(guess)
+    @guess_history.push(guess.map { |icon| Peg.new(icon) })
+  end
+
   def take_turn(turn)
     if turn > 3
       guess = []
       @eliminated.each { |spot| guess.push(pick_peg(spot)) }
+      store_guess(guess.map(&:icon))
       guess.map(&:icon).join
     else
-      init_guesses[turn - 1].map(&:icon).join
+      guess = init_guesses[turn - 1].map(&:icon)
+      store_guess(guess)
+      guess.join
     end
   end
 

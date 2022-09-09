@@ -3,6 +3,7 @@
 require 'pry-byebug'
 require './peg'
 require './row'
+require './ai'
 
 # Game stores game state, manages game loop
 class Game
@@ -34,7 +35,7 @@ class Game
     @game_over
   end
 
-  def structure_guess(guess)
+  def structure_row(guess)
     guess.split('')
   end
 
@@ -43,8 +44,8 @@ class Game
     @guesses.push(pegs)
   end
 
-  def take_turn
-    make_guess structure_guess gets.chomp
+  def take_turn(row)
+    make_guess structure_row row
   end
 
   def guess_is_correct?
@@ -61,14 +62,17 @@ class Game
   end
 
   def generate_hint(row)
-    puts "#{correct_spots(row).length} pegs in the right place"
-    puts "#{correct_colors(row).length - correct_spots(row).length} pegs are the right color, but in the wrong place."
-    puts "#{4 - correct_colors(row).length} pegs are wrong altogether."
+    { spot: correct_spots(row).length,
+      color: correct_colors(row).length - correct_spots(row).length,
+      wrong: 4 - correct_colors(row).length }
   end
 
   def end_turn
     @game_over = true if guess_is_correct?
-    generate_hint(@guesses[-1])
+    hint = generate_hint(@guesses[-1])
+    puts "#{hint[:spot]} pegs in the right place"
+    puts "#{hint[:color]} pegs are the right color, but in the wrong place."
+    puts "#{hint[:wrong]} pegs are wrong altogether."
     increment_turn
   end
 
@@ -76,7 +80,7 @@ class Game
 
   def start_game
     until game_over?
-      take_turn
+      take_turn gets.chomp
       end_turn
     end
     if correct_spots(@guesses[-1]).length == 4
@@ -85,7 +89,18 @@ class Game
       puts 'You Lose!'
     end
   end
+
+  def start_mastermind
+    ai = AI.new
+    input = gets.chomp
+    @code = structure_row(input).map { |icon| Peg.new(icon) }
+    until game_over?
+      take_turn(ai.take_turn(@turn))
+      ai.end_turn(generate_hint(guesses[-1]))
+      end_turn
+    end
+  end
 end
 
 game = Game.new
-game.start_game
+game.start_mastermind
