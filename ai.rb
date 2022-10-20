@@ -15,7 +15,15 @@ class AI
   private
 
   def pick_peg(eliminated)
-    OPTIONS.reject { |option| eliminated.include?(option) }.sample
+    binding.pry
+    replace = 4 - @hints[-1][:spot]
+    recent_guess = @guess_history[-1]
+    replace.times do
+      index = recent_guess.index(recent_guess.sample)
+      recent_guess[index] = OPTIONS.reject { |option| eliminated.include?(option) }.sample
+      binding.pry
+    end
+    recent_guess
   end
 
   def handle_correct_colors
@@ -42,13 +50,13 @@ class AI
   end
 
   def store_guess(guess)
-    @guess_history.push(guess.map { |icon| Peg.new(icon) })
+    @guess_history.push(guess.map { |icon| OPTIONS.find { |option| option.icon == icon } })
   end
 
   def take_turn(turn)
     if turn > 3
       guess = []
-      @eliminated.each { |spot| guess.push(pick_peg(spot)) }
+      @eliminated.each { |elim| guess.push(pick_peg(elim)) }
       store_guess(guess.map(&:icon))
       guess.map(&:icon).join
     else
